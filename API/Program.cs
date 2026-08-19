@@ -46,6 +46,14 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider
+        .GetRequiredService<ToDoDbContext>();
+
+    DbSeeder.Seed(context);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
