@@ -8,12 +8,19 @@ function Layout() {
         <h2>Meny</h2>
 
         <nav>
-          <Link to="/">Hem</Link>
+            <Link to="/">Alla</Link>
+            <Link to="/open">Öppna</Link>
+            <Link to="/done">Lista klara</Link>
+
+          {/* <Link to="/">Hem</Link>
           <Link to="/todo/new">
             Lägg till
           </Link>
-          <button>Lista öppna</button>
-          <button>Lista klara</button>
+          <Link to="/done">
+            Lista klara
+          </Link>
+          <button>Lista öppna</button> */}
+          {/* <button>Lista klara</button> */}
         </nav>
       </aside>
 
