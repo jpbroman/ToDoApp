@@ -1,0 +1,61 @@
+.layout {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 100vh;
+
+  gap: 24px;
+}
+
+.sidebar {
+  flex: 0 0 140px;
+
+  padding: 32px 12px;
+
+  background: #f1f1f1;
+}
+
+.sidebar h2 {
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar a,
+.sidebar button {
+  width: 100%;
+  padding: 10px 12px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #ddd;
+
+  font-family: inherit;
+  font-size: 1rem;
+
+  text-align: left;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.sidebar a:hover,
+.sidebar button:hover {
+  background: #ccc;
+}
+
+.main {
+  flex: 0 1 auto;
+
+  width: 600px;
+  padding: 32px 0;
+}
