@@ -47,6 +47,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 using (var scope = app.Services.CreateScope())
+using static API.Data.DbSeeder;
 {
     var context = scope.ServiceProvider
         .GetRequiredService<ToDoDbContext>();
