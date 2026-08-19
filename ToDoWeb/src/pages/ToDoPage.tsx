@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type ToDo from '../../models/ToDo';
-import config from '../../config.json';
+import type ToDo from "../../models/ToDo";
+import config from "../../config.json";
 import "./ToDoPage.css";
 
-function ToDoPage() {
-    console.log('Home:');
+interface ToDoPageProps {
+  filter?: "all" | "done" | "open";
+}
+
+function ToDoPage({ filter = "all" }: ToDoPageProps) {
   const [todos, setTodos] = useState<ToDo[]>([]);
 
   useEffect(() => {
@@ -14,6 +17,7 @@ function ToDoPage() {
 
       try {
         const response = await fetch(url);
+
         if (response.ok) {
           const data = await response.json();
           setTodos(data);
@@ -22,32 +26,42 @@ function ToDoPage() {
         console.error("Fel vid hämtning:", err);
       }
     }
+
     fetchTodos();
   }, []);
 
+  const visibleTodos = todos.filter((todo) => {
+    if (filter === "done") {
+      return todo.done;
+    }
+
+    if (filter === "open") {
+      return !todo.done;
+    }
+
+    return true;
+  });
+
   return (
     <div className="todo-page">
-      <h1>ToDo</h1>
+      <h1>
+        {filter === "done"
+          ? "Klara ToDos"
+          : filter === "open"
+            ? "Öppna ToDos"
+            : "Alla ToDos"}
+      </h1>
+
       <div className="todo-list">
-        <div className="todo-row" style={{ margin: "0 0 4px 0", color: "#010102" }}>
-          <div>Rubrik</div>
-          <div>Skapad</div>
-        </div>
-        {todos.map((todo) => (
+        {visibleTodos.map((todo) => (
           <div className="todo-row" key={todo.id}>
             <div>
-              <Link style={{ margin: "0 0 4px 0", color: "#007bff" }} to={`/todo/${todo.id}`}>
-                {todo.heading}
-              </Link>
+              <Link to={`/todo/${todo.id}`}>{todo.heading}</Link>
             </div>
 
-            <div>
-              {new Date(todo.created).toLocaleDateString("sv-SE")}
-            </div>
+            <div>{todo.created}</div>
 
-            <div>
-              Klar: {todo.done ? "Ja" : "Nej"}
-            </div>
+            <div>Klar: {todo.done ? "Ja" : "Nej"}</div>
           </div>
         ))}
       </div>
@@ -56,3 +70,4 @@ function ToDoPage() {
 }
 
 export default ToDoPage;
+

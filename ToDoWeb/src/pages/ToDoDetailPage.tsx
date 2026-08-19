@@ -108,7 +108,6 @@ if (!todo) {
       </div>
         {/* Åtgärdsknappar */}
         <div style={{ display: 'flex', gap: '8px' }}>
-        {/* Ändra från: onClick={() => setFormData(movie)} */}
         <button 
             onClick={toggleTodo} 
             style={{ padding: '6px 12px', backgroundColor: '#f0f0f0', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', fontSize: '0.9rem' }}

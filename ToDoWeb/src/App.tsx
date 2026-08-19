@@ -9,7 +9,20 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<ToDoPage />} />
+          <Route
+            path="/"
+            element={<ToDoPage filter="all" />}
+          />
+
+          <Route
+            path="/done"
+            element={<ToDoPage filter="done" />}
+          />
+
+          <Route
+            path="/open"
+            element={<ToDoPage filter="open" />}
+          />
           <Route path="/todo/:id" element={<ToDoDetailPage />} />
 
           <Route path="/todo/new" element={<ToDoFormPage />} />
