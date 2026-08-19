@@ -27,12 +27,12 @@
 }
 
 .todo-row a {
-  color: inherit;
-  text-decoration: none;
+  color: blue;
+  text-decoration: underline;
 }
 
 .todo-row a:hover {
-  text-decoration: underline;
+  color: darkblue;
 }
 
 .todo-detail {

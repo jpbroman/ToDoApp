@@ -1,5 +1,6 @@
 using API.Data;
 using Microsoft.EntityFrameworkCore;
+using static API.Data.DbSeeder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 using (var scope = app.Services.CreateScope())
-using static API.Data.DbSeeder;
 {
     var context = scope.ServiceProvider
         .GetRequiredService<ToDoDbContext>();
