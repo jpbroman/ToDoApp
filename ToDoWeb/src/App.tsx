@@ -23,8 +23,6 @@ function App() {
             path="/open"
             element={<ToDoPage filter="open" />}
           />
-          {/* <Route path="/" element={<ToDoPage />} />
-          <Route path="/done" element={<ToDoPage showDone={true} />} /> */}
           <Route path="/todo/:id" element={<ToDoDetailPage />} />
 
           <Route path="/todo/new" element={<ToDoFormPage />} />

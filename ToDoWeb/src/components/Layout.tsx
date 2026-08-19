@@ -12,15 +12,6 @@ function Layout() {
             <Link to="/open">Öppna</Link>
             <Link to="/done">Lista klara</Link>
 
-          {/* <Link to="/">Hem</Link>
-          <Link to="/todo/new">
-            Lägg till
-          </Link>
-          <Link to="/done">
-            Lista klara
-          </Link>
-          <button>Lista öppna</button> */}
-          {/* <button>Lista klara</button> */}
         </nav>
       </aside>
 
