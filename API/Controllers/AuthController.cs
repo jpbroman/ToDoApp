@@ -55,6 +55,45 @@ public class AuthController : ControllerBase
         });
     }
 
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterRequest request)
+    {
+        var existingUser =
+            await _userManager.FindByNameAsync(request.Username);
+
+        if (existingUser != null)
+        {
+            return BadRequest(new
+            {
+                message = "Användarnamnet är redan upptaget"
+            });
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = request.Username
+        };
+
+        var result = await _userManager.CreateAsync(
+            user,
+            request.Password);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(new
+            {
+                message = string.Join(
+                    ", ",
+                    result.Errors.Select(e => e.Description))
+            });
+        }
+
+        return Ok(new
+        {
+            message = "Användaren är skapad"
+        });
+    }
+
     private string CreateToken(ApplicationUser user)
     {
         var claims = new[]
@@ -82,6 +121,10 @@ public class AuthController : ControllerBase
 }
 
 public record LoginRequest(
+    string Username,
+    string Password);
+
+public record RegisterRequest(
     string Username,
     string Password);
 

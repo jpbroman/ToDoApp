@@ -30,7 +30,7 @@ function ToDoFormPage() {
 
         const data: ToDo = await response.json();
 
-        console.log("Todo för redigering:", data);
+//        console.log("Todo för redigering:", data);
 
         setTodo(data);
       } catch (error) {

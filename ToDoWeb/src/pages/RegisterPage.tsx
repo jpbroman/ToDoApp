@@ -1,25 +1,29 @@
 import { type SubmitEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./LoginPage.css";
-import "../../api/ApiFetch";
 import { apiFetch } from "../../api/ApiFetch";
 
-function LoginPage() {
+function RegisterPage() {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Ta bort tidigare felmeddelande
     setError("");
+
+    if (password !== confirmPassword) {
+      setError("Lösenorden är inte lika");
+      return;
+    }
 
     try {
       const response = await apiFetch(
-        `/Auth/login`,
+        `/Auth/register`,
         {
           method: "POST",
           headers: {
@@ -33,33 +37,20 @@ function LoginPage() {
       );
 
       if (!response.ok) {
-        let message = "Fel användare eller lösenord";
+        const data = await response.json();
 
-        try {
-          const errorData = await response.json();
+        setError(
+          data.message ?? "Kunde inte registrera användaren"
+        );
 
-          if (errorData.message) {
-            message = errorData.message;
-          }
-        } catch {
-          // API:t returnerade inget JSON-svar
-        }
-
-        setError(message);
         return;
       }
 
-      const data = await response.json();
+      // Registreringen lyckades. Tillbaks till login.
+      navigate("/login");
 
-      localStorage.setItem("token", data.token);
-
-      console.log("Login lyckades!");
-//      console.log("JWT sparad", data.token);
-
-      // Gå till huvudmenyn / ToDo-listan
-      navigate("/");
     } catch (error) {
-      console.error("Fel vid login:", error);
+      console.error("Fel vid registrering:", error);
       setError("Kunde inte kontakta servern");
     }
   }
@@ -67,7 +58,7 @@ function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-box">
-        <h1>Logga in</h1>
+        <h1>Registrera användare</h1>
 
         <form onSubmit={handleSubmit}>
 
@@ -80,8 +71,9 @@ function LoginPage() {
               id="username"
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
+              onChange={(e) =>
+                setUsername(e.target.value)
+              }
               required
             />
           </div>
@@ -95,8 +87,25 @@ function LoginPage() {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              required
+            />
+          </div>
+
+          <div className="login-field">
+            <label htmlFor="confirmPassword">
+              Bekräfta lösenord
+            </label>
+
+            <input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) =>
+                setConfirmPassword(e.target.value)
+              }
               required
             />
           </div>
@@ -108,17 +117,18 @@ function LoginPage() {
           )}
 
           <button style={{ marginTop: "15px", marginBottom: "15px"}} type="submit">
-            Logga in
+            Registrera
           </button>
-          <div>
-            <Link to="/register">
-                Registrera ny användare
-            </Link>
-          </div>
         </form>
+
+        <div className="register-link">
+          <Link to="/login">
+            Tillbaka till Logga in
+          </Link>
+        </div>
       </div>
     </div>
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
