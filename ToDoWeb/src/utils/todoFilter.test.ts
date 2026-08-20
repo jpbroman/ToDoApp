@@ -1,0 +1,53 @@
+import { describe, expect, it } from "vitest";
+import { filterTodos } from "./todoFilter";
+import type ToDo from "../../models/ToDo";
+
+const todos: ToDo[] = [
+  {
+    id: 1,
+    heading: "Klar Todo",
+    note: "Test",
+    created: "2026-08-20",
+    doDate: "2026-08-21",
+    done: true,
+  },
+  {
+    id: 2,
+    heading: "Öppen Todo",
+    note: "Test",
+    created: "2026-08-20",
+    doDate: "2026-08-22",
+    done: false,
+  },
+  {
+    id: 3,
+    heading: "En till klar",
+    note: "Test",
+    created: "2026-08-20",
+    doDate: "2026-08-23",
+    done: true,
+  },
+];
+
+describe("filterTodos", () => {
+  it("ska returnera alla ToDos med filter all", () => {
+    const result = filterTodos(todos, "all");
+
+    expect(result).toHaveLength(3);
+    expect(result.map((todo) => todo.id)).toEqual([1, 2, 3]);
+  });
+
+  it("ska bara returnera klara ToDos", () => {
+    const result = filterTodos(todos, "done");
+
+    expect(result).toHaveLength(2);
+    expect(result.map((todo) => todo.id)).toEqual([1, 3]);
+  });
+
+  it("ska bara returnera öppna ToDos", () => {
+    const result = filterTodos(todos, "open");
+
+    expect(result).toHaveLength(1);
+    expect(result.map((todo) => todo.id)).toEqual([2]);
+  });
+});
