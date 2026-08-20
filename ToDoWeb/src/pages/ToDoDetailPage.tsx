@@ -1,30 +1,30 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type ToDo from "../../models/ToDo";
-import config from '../../config.json';
 import "./ToDoPage.css";
+import { apiFetch } from "../../api/ApiFetch";
 
 function ToDoDetailPage() {
     const { id } = useParams();
-  const navigate = useNavigate();
+    const navigate = useNavigate();
     const [todo, setTodo] = useState<ToDo | null>(null);
-    const url = `${config.API_URL}/ToDos/${id}`;
+    const url = `/ToDos/${id}`;
 
     useEffect(() => {
-    fetch(url)
-      .then((response) => response.json())
-      .then((data: ToDo) => {
-        setTodo(data);
-      });
+        apiFetch(url)
+        .then((response) => response.json())
+        .then((data: ToDo) => {
+            setTodo(data);
+        });
   }, [id, url]);
 
   async function submitTodo(updatedTodo: ToDo) {
-  const url = `${config.API_URL}/ToDos/${id}`;
+  const url = `/ToDos/${id}`;
 
   console.log("Skickar:", updatedTodo);
 
   try {
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +69,7 @@ if (!todo) {
       }
 
       try {
-        const response = await fetch(`${config.API_URL}/ToDos/${id}`, {
+        const response = await apiFetch(`/ToDos/${id}`, {
           method: "DELETE",
         });
 

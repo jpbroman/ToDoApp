@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type ToDo from "../../models/ToDo";
-import config from "../../config.json";
 import "./ToDoPage.css";
+import { apiFetch } from "../../api/ApiFetch";
 
 interface ToDoPageProps {
   filter?: "all" | "done" | "open";
@@ -13,10 +13,8 @@ function ToDoPage({ filter = "all" }: ToDoPageProps) {
 
   useEffect(() => {
     async function fetchTodos() {
-      const url = `${config.API_URL}/ToDos`;
-
       try {
-        const response = await fetch(url);
+        const response = await apiFetch("/ToDos");
 
         if (response.ok) {
           const data = await response.json();

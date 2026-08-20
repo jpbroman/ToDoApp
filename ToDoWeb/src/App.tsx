@@ -3,32 +3,51 @@ import Layout from "./components/Layout";
 import ToDoPage from "./pages/ToDoPage";
 import ToDoDetailPage from "./pages/ToDoDetailPage";
 import ToDoFormPage from "./pages/ToDoFormPage";
+import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+      {/* Publik route */}
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* Skyddade routes */}
+      <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>
-          <Route
-            path="/"
-            element={<ToDoPage filter="all" />}
-          />
+
+          <Route path="/" element={<ToDoPage />} />
 
           <Route
             path="/done"
-            element={<ToDoPage filter="done" />}
+            element={<ToDoPage filter={"done"} />}
           />
 
           <Route
             path="/open"
-            element={<ToDoPage filter="open" />}
+            element={<ToDoPage filter={"open"} />}
           />
-          <Route path="/todo/:id" element={<ToDoDetailPage />} />
 
-          <Route path="/todo/new" element={<ToDoFormPage />} />
-          <Route path="/todo/:id/edit" element={<ToDoFormPage />} />
+          <Route
+            path="/todo/:id"
+            element={<ToDoDetailPage />}
+          />
+
+          <Route
+            path="/todo/new"
+            element={<ToDoFormPage />}
+          />
+
+          <Route
+            path="/todo/:id/edit"
+            element={<ToDoFormPage />}
+          />
+
         </Route>
-      </Routes>
+      </Route>
+  </Routes>
     </BrowserRouter>
   );
 }

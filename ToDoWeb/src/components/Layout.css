@@ -59,3 +59,24 @@
   width: 600px;
   padding: 32px 0;
 }
+
+.login-menu {
+  margin-top: auto;
+  padding-top: 60px;
+  border-top: 1px solid #ddd;
+}
+
+.login-menu button {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 16px;
+}
+
+.login-menu button:hover {
+  opacity: 0.85;
+}
+

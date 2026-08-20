@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type ToDo from "../../models/ToDo";
-import config from "../../config.json";
 import ToDoForm from "../components/ToDoForm";
+import { apiFetch } from "../../api/ApiFetch";
 
 function ToDoFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,9 +22,7 @@ function ToDoFormPage() {
       }
 
       try {
-        const response = await fetch(
-          `${config.API_URL}/ToDos/${id}`
-        );
+        const response = await apiFetch(`/ToDos/${id}`);
 
         if (!response.ok) {
           throw new Error("Kunde inte hämta Todo");
@@ -49,21 +47,17 @@ function ToDoFormPage() {
     return <p>Laddar...</p>;
   }
 
-  // Om vi redigerar men inte hittade Todo
   if (isEdit && !todo) {
     return <p>Kunde inte hitta Todo.</p>;
   }
 
   async function handleSave(updatedTodo: ToDo) {
     const url = isEdit
-      ? `${config.API_URL}/ToDos/${id}`
-      : `${config.API_URL}/ToDos`;
+      ? `/ToDos/${id}`
+      : `/ToDos`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: isEdit ? "PUT" : "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(updatedTodo),
     });
 
