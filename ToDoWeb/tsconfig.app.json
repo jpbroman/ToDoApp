@@ -22,5 +22,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "models/ToDo.tsx"]
+  "include": ["src", "models/ToDo.tsx", "api/ApiFetch.tsx"]
 }

@@ -1,10 +1,12 @@
 using API.Data;
 using API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ToDosController(ToDoDbContext context) : ControllerBase
@@ -15,30 +17,30 @@ public class ToDosController(ToDoDbContext context) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ToDo>>> GetAllTodo()
     {
-        var todos = await _context.ToDo 
+        var todos = await _context.ToDos 
             .OrderBy(t => t.DoDate)
             .ToListAsync();
 
         return Ok(todos);
     }
-
-    // 2. READ ONE: GET /api/todos/{id}
+ 
+    // GET /api/todos/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<ToDo>> GetToDo(int id)
     {
-        var toDo = await _context.ToDo.FindAsync(id);
+        var toDo = await _context.ToDos.FindAsync(id);
 
         return toDo ?? (ActionResult<ToDo>)NotFound($"Hittade ingen uppgift med ID {id}.");
     }
 
-    // 3. CREATE: POST /api/todos
+    // POST /api/todos
     [HttpPost]
     public async Task<ActionResult<ToDo>> CreateToDo(ToDo toDo)
     {
         // Sätt skapat-datumet till dagens datum automatiskt på servern
         toDo.Created = DateOnly.FromDateTime(DateTime.Today);
 
-        _context.ToDo.Add(toDo);
+        _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
 
         // Returnerar statuskod 201 Created samt URL till den nya resursen
@@ -57,7 +59,7 @@ public class ToDosController(ToDoDbContext context) : ControllerBase
         // Informera EF Core om att objektet har ändrats
         _context.Entry(toDo).State = EntityState.Modified;
 
-        // Förhindra att det ursprungliga skapat-datumet skrivs över/ändras vid uppdatering
+        // Hindra att det ursprungliga skapat-datumet skrivs över/ändras vid uppdatering
         _context.Entry(toDo).Property(x => x.Created).IsModified = false;
 
         try
@@ -79,25 +81,25 @@ public class ToDosController(ToDoDbContext context) : ControllerBase
         return NoContent(); // Svarar 204 No Content vid lyckad uppdatering
     }
 
-    // 5. DELETE: DELETE /api/todos/{id}
+    // DELETE /api/todos/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteToDo(int id)
     {
-        var toDo = await _context.ToDo.FindAsync(id);
+        var toDo = await _context.ToDos.FindAsync(id);
         if (toDo == null)
         {
             return NotFound($"Uppgiften med ID {id} hittades inte.");
         }
 
-        _context.ToDo.Remove(toDo);
+        _context.ToDos.Remove(toDo);
         await _context.SaveChangesAsync();
 
         return NoContent();
     }
 
-    // Hjälpmetod för att kontrollera om en ToDo existerar
+    // Kontrollera om en ToDo existerar
     private bool ToDoExists(int id)
     {
-        return _context.ToDo.Any(e => e.Id == id);
+        return _context.ToDos.Any(e => e.Id == id);
     }
 }
