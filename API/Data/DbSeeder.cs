@@ -15,7 +15,7 @@ public static class DbSeeder
         var random = new Random();
 
         string[] headings =
-        {
+        [
             "Handla mat",
             "Gå ut med hunden",
             "Träna",
@@ -26,16 +26,16 @@ public static class DbSeeder
             "Tvätta bilen",
             "Planera veckan",
             "Köp kaffe"
-        };
+        ];
 
         string[] notes =
-        {
+        [
             "Kom ihåg detta",
             "Gör detta så snart som möjligt",
             "Kan vänta några dagar",
             "Viktigt!",
             "Gör när du får tid"
-        };
+        ];
 
         var todos = new List<ToDo>();
 
