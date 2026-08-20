@@ -58,8 +58,11 @@ function RegisterPage() {
   return (
     <div className="login-page">
       <div className="login-box">
-        <h1>Registrera användare</h1>
+         <div>
+            <h1>ToDo App</h1>
+        </div>
 
+        <h2>Registrera användare</h2>
         <form onSubmit={handleSubmit}>
 
           <div className="login-field">
