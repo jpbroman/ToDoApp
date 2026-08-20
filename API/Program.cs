@@ -1,5 +1,6 @@
 using System.Text;
 using API.Data;
+using API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,7 +33,11 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 1. Define the policy
+builder.Services
+    .AddIdentityCore<ApplicationUser>()
+    .AddEntityFrameworkStores<ToDoDbContext>();
+
+// policy
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowFrontend",
         policy => policy.WithOrigins("http://localhost:5173") // Your frontend URL
@@ -66,15 +71,13 @@ builder.Services.AddAuthentication(
 
 var app = builder.Build();
 
-// Säkerställ att databasen och dess tabeller skapas vid uppstart
+// databasen och tabeller skapas vid uppstart
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<ToDoDbContext>();
-        // Denna rad kikar på dina DbSets och skapar databasen + tabellerna 
-        // OM de inte redan finns på hårddisken.
         await context.Database.EnsureCreatedAsync();
     }
     catch (Exception ex)
@@ -97,6 +100,13 @@ using (var scope = app.Services.CreateScope())
         .GetRequiredService<ToDoDbContext>();
 
     DbSeeder.Seed(context);
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    await IdentitySeeder.SeedAsync(services);
 }
 
 if (app.Environment.IsDevelopment())

@@ -1,93 +1,120 @@
+import { type SubmitEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import config from "../../config.json";
 import "./LoginPage.css";
+import "../../api/ApiFetch";
+import { apiFetch } from "../../api/ApiFetch";
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    // Ta bort tidigare felmeddelande
+    setError("");
+
     try {
-        const response = await fetch(
-        `${config.API_URL}/Auth/login`,
+      const response = await apiFetch(
+        `/Auth/login`,
         {
-            method: "POST",
-            headers: {
+          method: "POST",
+          headers: {
             "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+          },
+          body: JSON.stringify({
             username,
             password,
-            }),
+          }),
         }
-        );
+      );
 
-        if (!response.ok) {
-            throw new Error("Fel användarnamn eller lösenord");
+      if (!response.ok) {
+        let message = "Fel användare eller lösenord";
+
+        try {
+          const errorData = await response.json();
+
+          if (errorData.message) {
+            message = errorData.message;
+          }
+        } catch {
+          // API:t returnerade inget JSON-svar
         }
 
-        const data = await response.json();
+        setError(message);
+        return;
+      }
 
-        localStorage.setItem("token", data.token);
+      const data = await response.json();
 
-        console.log("Login lyckades!");
-        console.log("JWT sparad", localStorage.getItem("token"));
+      localStorage.setItem("token", data.token);
 
-        navigate("/");
+      console.log("Login lyckades!");
+      console.log("JWT sparad", data.token);
+
+      // Gå till huvudmenyn / ToDo-listan
+      navigate("/");
     } catch (error) {
-        console.error("Login misslyckades:", error);
+      console.error("Fel vid login:", error);
+      setError("Kunde inte kontakta servern");
     }
-  };
+  }
 
-    return (
+  return (
     <div className="login-page">
-        <div className="login-box">
+      <div className="login-box">
         <h1>Logga in</h1>
 
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
 
-            <div className="login-field">
+          <div className="login-field">
             <label htmlFor="username">
-                Användarnamn
+              Användarnamn
             </label>
 
             <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              required
             />
-            </div>
+          </div>
 
-            <div className="login-field">
+          <div className="login-field">
             <label htmlFor="password">
-                Lösenord
+              Lösenord
             </label>
 
             <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
             />
-            </div>
+          </div>
 
-            <button
-            className="login-button"
-            type="submit"
-            >
+          {error && (
+            <p className="login-error">
+              {error}
+            </p>
+          )}
+
+          <button type="submit">
             Logga in
-            </button>
+          </button>
 
         </form>
-        </div>
+      </div>
     </div>
-    );
+  );
 }
 
 export default LoginPage;

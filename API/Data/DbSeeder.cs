@@ -7,7 +7,7 @@ public static class DbSeeder
     public static void Seed(ToDoDbContext context)
     {
         // Finns det redan data gör vi ingenting
-        if (context.ToDo.Any())
+        if (context.ToDos.Any())
         {
             return;
         }
@@ -55,7 +55,7 @@ public static class DbSeeder
             });
         }
 
-        context.ToDo.AddRange(todos);
+        context.ToDos.AddRange(todos);
         context.SaveChanges();
     }
 }

@@ -59,3 +59,11 @@
 .login-button:hover {
   opacity: 0.85;
 }
+
+.login-error {
+  margin: 0 0 12px 0;
+  padding: 10px;
+  border: 1px solid #d88;
+  border-radius: 6px;
+  background: #fbeaea;
+}

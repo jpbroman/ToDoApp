@@ -17,7 +17,7 @@ public class ToDosController(ToDoDbContext context) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ToDo>>> GetAllTodo()
     {
-        var todos = await _context.ToDo 
+        var todos = await _context.ToDos 
             .OrderBy(t => t.DoDate)
             .ToListAsync();
 
@@ -28,7 +28,7 @@ public class ToDosController(ToDoDbContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ToDo>> GetToDo(int id)
     {
-        var toDo = await _context.ToDo.FindAsync(id);
+        var toDo = await _context.ToDos.FindAsync(id);
 
         return toDo ?? (ActionResult<ToDo>)NotFound($"Hittade ingen uppgift med ID {id}.");
     }
@@ -40,7 +40,7 @@ public class ToDosController(ToDoDbContext context) : ControllerBase
         // Sätt skapat-datumet till dagens datum automatiskt på servern
         toDo.Created = DateOnly.FromDateTime(DateTime.Today);
 
-        _context.ToDo.Add(toDo);
+        _context.ToDos.Add(toDo);
         await _context.SaveChangesAsync();
 
         // Returnerar statuskod 201 Created samt URL till den nya resursen
@@ -85,13 +85,13 @@ public class ToDosController(ToDoDbContext context) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteToDo(int id)
     {
-        var toDo = await _context.ToDo.FindAsync(id);
+        var toDo = await _context.ToDos.FindAsync(id);
         if (toDo == null)
         {
             return NotFound($"Uppgiften med ID {id} hittades inte.");
         }
 
-        _context.ToDo.Remove(toDo);
+        _context.ToDos.Remove(toDo);
         await _context.SaveChangesAsync();
 
         return NoContent();
@@ -100,6 +100,6 @@ public class ToDosController(ToDoDbContext context) : ControllerBase
     // Hjälpmetod för att kontrollera om en ToDo existerar
     private bool ToDoExists(int id)
     {
-        return _context.ToDo.Any(e => e.Id == id);
+        return _context.ToDos.Any(e => e.Id == id);
     }
 }
