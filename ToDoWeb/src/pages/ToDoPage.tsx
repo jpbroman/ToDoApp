@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import type ToDo from "../../models/ToDo";
 import "./ToDoPage.css";
 import { apiFetch } from "../../api/ApiFetch";
+import { filterTodos } from "../utils/todoFilter";
 
 interface ToDoPageProps {
   filter?: "all" | "done" | "open";
@@ -28,18 +29,8 @@ function ToDoPage({ filter = "all" }: ToDoPageProps) {
     fetchTodos();
   }, []);
 
-  const visibleTodos = todos.filter((todo) => {
-    if (filter === "done") {
-      return todo.done;
-    }
-
-    if (filter === "open") {
-      return !todo.done;
-    }
-
-    return true;
-  });
-
+  const visibleTodos = filterTodos(todos, filter);
+  
   return (
     <div className="todo-page">
       <h1>
